@@ -17,10 +17,11 @@ export default class Maze {
   }
 
   print () {
-    console.log(`*${[...range(1, this.grid.length)].map(() => '-*').join('')}`);
+    console.log(`*${[...range(1, this.grid.length)].map(() => '--*').join('')}`);
     this.grid.forEach((row) => {
-      console.log(`|${row.map((location) => location.right ? '  ' : ' |').join('')}`);
-      console.log(`*${row.map((location) => location.down ? ' *' : '-*').join('')}`);
+      console.log(`|${row.map((location) => location.right ? '   ' : '  |').join('')}`);
+      console.log(`|${row.map((location) => location.right ? '   ' : '  |').join('')}`);
+      console.log(`*${row.map((location) => location.down ? '  *' : '--*').join('')}`);
     });
   }
 
