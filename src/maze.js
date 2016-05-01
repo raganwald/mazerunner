@@ -25,29 +25,12 @@ export default class Maze {
   }
 
   initializeEachButLastRow (row) {
-    this.connectHalfRegions(row);
+    this.maybeConnectAcrossRow(row);
     this.connectDown(row);
   }
 
   initializeLastRow () {
-    this.connectAllRegions(this.grid[this.grid.length - 1]);
-  }
-
-  groupBySet(row) {
-    const [first, ...rest] = row;
-    const regions = [ [first] ];
-
-    return rest.reduce(function (regions, eachLocation) {
-      const lastRegion = regions[regions.length - 1];
-      const lastRegionSet = lastRegion[0].set;
-
-      if (lastRegionSet.has(eachLocation)) {
-        lastRegion.push(eachLocation);
-      } else {
-        regions.push([eachLocation]);
-      }
-      return regions;
-    }, [ [first] ]);
+    this.connectAcrossRow(this.grid[this.grid.length - 1]);
   }
 
   maybeConnect (location1, location2) {
@@ -93,38 +76,50 @@ export default class Maze {
     });
   }
 
-  firstOfEachRegion (regions) {
-    return regions.map((region) => region[0]);
-  }
-
-  lastOfEachRegion (regions) {
-    return regions.map((region) => region[region.length - 1]);
-  }
-
   zipWithPairs (fn, row) {
-    const regions = this.groupBySet(row);
-    const firsts = this.firstOfEachRegion(regions).slice(1, regions.length);
-    const lasts = this.lastOfEachRegion(regions).slice(0, regions.length - 1);
+    const firsts = row.slice(1, row.length);
+    const lasts = row.slice(0, row.length - 1);
 
     return zipWith(fn, firsts, lasts); // force lazy iteration
   }
 
-  connectHalfRegions (row) {
-    this.zipWithPairs((a, b) => this.maybeConnect(a, b), row);
+  maybeConnectAcrossRow (row) {
+    this.zipWithPairs((a, b) => { a.set.has(b) ? null : this.maybeConnect(a, b) }, row);
   }
 
-  connectAllRegions (row) {
-    this.zipWithPairs((a, b) => this.connect(a, b), row);
+  connectAcrossRow (row) {
+    this.zipWithPairs((a, b) => { a.set.has(b) ? null : this.connect(a, b) }, row);
+  }
+
+  groupedBySet (row) {
+    return row.reduce((groupedBySet, location) => {
+      const existingGroup = groupedBySet.find((group) => group[0].set.has(location));
+
+      if (existingGroup) {
+        existingGroup.push(location);
+      } else {
+        groupedBySet.push([location]);
+      }
+      return groupedBySet;
+    }, []);
   }
 
   connectDown (row) {
-    const regions = this.groupBySet(row);
+    const groupedBySet = this.groupedBySet(row);
 
-    regions.forEach((region) => {
-      const randomLocation = region[Math.floor(Math.random() * region.length)];
-      const downLocation = this.grid[randomLocation.row + 1][randomLocation.col];
+    groupedBySet.forEach((group) => {
+      group.forEach((location) => {
+        const downLocation = this.grid[location.row + 1][location.col];
 
-      this.connect(randomLocation, downLocation);
+        this.maybeConnect(location, downLocation);
+      });
+
+      if (group.every((location) => location.down === undefined)) {
+        const randomLocation = group[Math.floor(Math.random() * group.length)];
+        const downLocation = this.grid[randomLocation.row + 1][randomLocation.col];
+
+        this.connect(randomLocation, downLocation);
+      }
     });
   }
 }
