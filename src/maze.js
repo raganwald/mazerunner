@@ -1,10 +1,10 @@
-import { range, zipWith } from './sequences.js'
+import { range, zipWith } from './eager.js'
 
 export default class Maze {
   constructor (size = 10) {
 
-    this.grid = [...range(0, size-1)].map(
-      (row) => [...range(0, size-1)].map(
+    this.grid = range(0, size-1).map(
+      (row) => range(0, size-1).map(
         (col) => new Location({row, col})
       )
     );
@@ -106,7 +106,7 @@ export default class Maze {
     const firsts = this.firstOfEachRegion(regions).slice(1, regions.length);
     const lasts = this.lastOfEachRegion(regions).slice(0, regions.length - 1);
 
-    return [...zipWith(fn, firsts, lasts)]; // force lazy iteration
+    return zipWith(fn, firsts, lasts); // force lazy iteration
   }
 
   connectHalfRegions (row) {
