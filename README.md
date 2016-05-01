@@ -27,3 +27,32 @@ npm install --save-dev babel-cli babel-preset-es2015
 # make a .babelrc (config file) with the preset
 echo '{ "presets": ["es2015"] }' > .babelrc
 ```
+
+### running it
+
+```
+npm run build && node /Users/raganwald/github/mazerunner/lib/index.js
+
+
+*-*-*-*-*-*-*-*-*-*-*
+|   |   | | |       |
+* *-* *-* * * *-*-*-*
+|         | |       |
+*-*-* *-*-* *-* *-*-*
+|   |   |     | | | |
+*-* *-* *-*-* * * * *
+| | | | |   |     | |
+* * * * * *-*-* *-* *
+|   | |       |     |
+*-* * *-*-* *-*-*-* *
+|   | | |   | | | | |
+* *-* * *-* * * * * *
+| | |     |   | |   |
+* * *-*-* *-* * * *-*
+| |     |   |   | | |
+* *-*-* * *-* *-* * *
+|     | |         | |
+*-*-* * *-* *-*-*-* *
+|                   |
+*-*-*-*-*-*-*-*-*-*-*
+```
