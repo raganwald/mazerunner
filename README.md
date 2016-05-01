@@ -1,5 +1,7 @@
 # mazerunner
 
+Builds a maze in ES6 using [Eller's Algorithm](http://www.neocomputer.org/projects/eller.html) as described by [Jamis Buck](http://weblog.jamisbuck.org/2010/12/29/maze-generation-eller-s-algorithm).
+
 ### setup
 
 ```
