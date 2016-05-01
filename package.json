@@ -1,0 +1,12 @@
+{
+  "name": "mazerunner",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "babel src -d lib"
+  },
+  "devDependencies": {
+    "babel-cli": "~6.7.7",
+    "babel-preset-es2015": "~6.6.0",
+    "babel-polyfill": "~6.7.4"
+  }
+}
